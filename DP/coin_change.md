@@ -57,7 +57,8 @@
   ```
 
   5. 空间优化O(n^2)->O(n)    
-    根据最优子结构`F(Amount, C_k) = min[F(Amount, C_(k-1)), F(Amount-C[k], C_k)]`，如果以C_k作为行，能够看到原问题的最优解只依赖于当前行和上一行的子问题解，所以我们完全可以将原来O(n^2)空间的n_change，降维到O(n)。计算`F(j, i)`时，对应于此时要更新的`n_change[j]`；子问题`F(j, i-1)`对应已经计算过的`n_change[j]`；子问题`F(j-coins[i-1], i)`对应于当前行已经计算过的`n_change[j-coins[i-1]]`。空间优化后的代码如下：    
+    根据最优子结构`F(Amount, C_k) = min[F(Amount, C_(k-1)), F(Amount-C[k], C_k)]`，如果以C_k作为行，能够看到原问题的最优解只依赖于当前行和上一行的子问题解，所以我们完全可以将原来O(n^2)空间的n_change，降维到O(n)。计算`F(j, i)`时，对应于此时要更新的`n_change[j]`；子问题`F(j, i-1)`对应已经计算过的`n_change[j]`；子问题`F(j-coins[i-1], i)`对应于当前行已经计算过的`n_change[j-coins[i-1]]`。空间优化后的代码如下：   
+
     ```cpp
     int coinChange(vector<int>& coins, int amount) {
         if (amount <= 0)
