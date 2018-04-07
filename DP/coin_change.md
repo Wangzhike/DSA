@@ -132,6 +132,7 @@ int numOfCoinComb(int n) {
 
   [LeetCode 518: Coin Change 2](https://leetcode.com/problems/coin-change-2/description/):    
   > You are given coins of different denominations and a total amount of money. Write a function to compute the number of combinations that make up that amount. You may assume that you have infinite number of each kind of coin.    
+
   如上所述，最优子结构为：`F(Amount, C_k) = F(Amount, C_(k-1)) + F(Amount-C[k], C_k)`。直接使用空间占用为O(n)的思路解决该问题，但是需要对初始值进行特别处理：具体而言，因为是两个子问题通过相加得到原问题的解，子问题`F(Amount, C_(k-1))`在此时为已经计算过(或初始化了的)F[Amount]，当硬币集合大小为空时，其取初始值，所以该初始值应为0；子问题`F(Amount-C[k], C_k)`此时为已经计算过的`F(Amount-C[k])`。特别的，此时对于`F(0)`，也就是`Amount=0`，同时零钱集合为空的情况，由于`F(Amount-C[k])`会取到该值`F(0)`，而既然能通过使用面额为`C[k]`的零钱，将`Amount`减小到0，此时就对应了一种合法的找零方案，所以`F(0)`应该取1，以上就是对初始化的处理。    
   代码实现如下：    
   ```cpp
