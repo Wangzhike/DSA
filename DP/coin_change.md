@@ -90,7 +90,7 @@
     输出：共有5种拼凑方案。    
 
   类似于[1.1 求次数最小的找零方案](#11-求次数最小的找零方案)，最优子结构为：    
-  `F(Amount, C_k) = F(Amount, C_k-1) + F(Amount-C[k], C_k)`    
+  `F(Amount, C_k) = F(Amount, C_(k-1)) + F(Amount-C[k], C_k)`    
   根据最优子结构，可以使用DP求解该问题，但是此问题的硬币集合已经给出且相对简单，故也可直接采用暴力枚举方法求解：还是类似于贪心思路，先使用面额最大5角钱，剩余的钱再使用2角钱拼凑，最后剩下的钱使用1角钱拼凑。该实现代码如下：    
   ```cpp
 int NCoinComb(int x)
@@ -128,6 +128,32 @@ int numOfCoinComb(int n) {
 	}
 	return num;
 }  
+  ```
+
+  [LeetCode 518: Coin Change 2](https://leetcode.com/problems/coin-change-2/description/):    
+  > You are given coins of different denominations and a total amount of money. Write a function to compute the number of combinations that make up that amount. You may assume that you have infinite number of each kind of coin.    
+  如上所述，最优子结构为：`F(Amount, C_k) = F(Amount, C_(k-1)) + F(Amount-C[k], C_k)`。直接使用空间占用为O(n)的思路解决该问题，但是需要对初始值进行特别处理：具体而言，因为是两个子问题通过相加得到原问题的解，子问题`F(Amount, C_(k-1))`在此时为已经计算过(或初始化了的)F[Amount]，当硬币集合大小为空时，其取初始值，所以该初始值应为0；子问题`F(Amount-C[k], C_k)`此时为已经计算过的`F(Amount-C[k])`。特别的，此时对于`F(0)`，也就是`Amount=0`，同时零钱集合为空的情况，由于`F(Amount-C[k])`会取到该值`F(0)`，而既然能通过使用面额为`C[k]`的零钱，将`Amount`减小到0，此时就对应了一种合法的找零方案，所以`F(0)`应该取1，以上就是对初始化的处理。    
+  代码实现如下：    
+  ```cpp
+  int change(int amount, vector<int>& coins) {
+        int mostR = coins.size() - 1;
+        for (int i = mostR; i >= 0 && amount < coins[i]; --i)
+            --mostR;
+        if (mostR < 0 && amount == 0)
+            return 1;
+        if (amount <= 0)
+            return 0;
+        // cout << mostR << endl;
+        vector<int> num(amount+1, 0);
+        num[0] = 1;
+        for (int i = 0; i <= mostR ; ++i) {
+            for (int j = coins[i]; j < amount+1; ++j) {
+				/* 同上，j的下标从coins[i]开始！ */
+                num[j] += num[j-coins[i]];
+            }
+        }
+        return num[amount];
+    } 
   ```
 
 
