@@ -157,4 +157,54 @@ int numOfCoinComb(int n) {
     } 
   ```
 
+## 2. 零钱集合中元素使用次数有限    
+
+### 2.1 零钱集合中元素最多使用一次(01背包问题)    
+  算法导论上对**01背包问题**定义如下：    
+  > 一个正在抢劫商店的小偷发现了n个商品，第i个商品价值vi美元，重wi磅，vi和wi都是整数。这个小偷希望拿走价值尽量高的商品，但是他的背包最多能容纳W磅重的商品，W是一个整数。他应该拿哪些商品呢？(我们称这个问题是0-1背包问题，因为对每个商品，小偷要么把它完整拿走，要么把它留下；他不能只拿走一个商品的一部分，或者把一个商品拿走多次。)    
+  与上面分析类似，首先考虑对于商品集合的末尾元素`S[n]`，拿或不拿就会产生两个独立的子问题：拿走`S[k]`，则有子问题`F(W-S[n], S_(n-1))+v_n`；不拿`S[n]`，则有子问题`F(W, S_(n-1))`。可以证明这两个子问题都为各自的最优解，而选出两个子问题中价值更高的那个子问题，即为原问题的最优解，所以最优子结构为：`F(W, S_n) = max(F(W, S_(n-1)), F(W-S[n], S_(n-1))+v_n)`。    
+  仍然使用O(n)空间的方法解决该问题，也需要对初始值进行特殊处理：由于是两个子问题中价值更高的那个，所以子问题`F(W, S_(n-1))`对应上一次已经计算过的`F(W)`，当商品集合为空时，其取初始值，该初始值应为0；子问题`F(W-S[n], S_(n-1))+v_n`此处对应于`F(W-S[n])+v_n`，但与之前不同的是，此处对应于零钱集合的规模为`n-1`，即`S_(n-1)`，而不是上面例子中的`n`，因为对于商品`S[n]`，只能使用一次，而不是无限次。所以这里`F(W-S[n], S_(n-1))+v_n`对应的`F(W-S[n])+v_n`，应该为内循环上一次循环已经计算过的`F(W-S[n])+v_n`，而不是上面的本次循环已经计算出的`F(W-S[n])+v_n`，所以内循环应该是倒序的！这样才能确保计算`F(W)`时用到的`F(W-S[n])+v_n`是内循环上一次循环计算出的。具体实现代码如下：    
+  ```cpp
+int oneZeroKnapsack(vector<vector<int>> &things, int weight) {
+	int infval = 0;
+	vector<int> kp(weight+1, infval);
+	for (int i = 0; i < things.size(); ++i) {
+		for (int j = weight; j >= things[i][0]; --j) {
+			kp[j] = max(kp[j], kp[j-things[i][0]]+things[i][1]);
+		}
+	}
+	return kp[weight];
+}  
+  ```
+
+  再看一道南阳理工OJ的题目[860. 又见01背包](http://acm.nyist.edu.cn/JudgeOnline/problem.php?pid=860)：    
+  > 有n个重量和价值分别为wi 和 vi 的 物品，从这些物品中选择总重量不超过 W 
+的物品，求所有挑选方案中物品价值总和的最大值。
+　　1 <= n <=100
+　　1 <= wi <= 10^7
+　　1 <= vi <= 100
+　　1 <= W <= 10^9
+
+  由于背包可容纳重量`W`可能取到`10^9`这么大，如果直接以`W`作为维度，经测试会出现内存超出限制。所以转变思路，以价值作为维度，求价值最高的方案，价值的最大值为`100*100=10^4`，相对较小，然后从最大价值`10^4`开始，逆序寻找第一个背包重量小于等于`W`的方案对应的最高价格。具体实现代码如下：    
+  ```cpp
+int oneTwoKnapsackForMaxValue_inOn(vector<vector<int> > &things, int value, int weight) {
+	int infval = 1e9+1;
+	vector<int> kp(value+1, infval);
+	kp[0] = 0;
+	for (int i = 0; i < things.size(); ++i) {
+		for (int j = value; j >= things[i][1]; --j) {
+			kp[j] = min(kp[j], kp[j-things[i][1]]+things[i][0]);
+		}
+	}
+	int maxValue = 0;
+	for (int i = value; i >= 0; --i) {
+		if (kp[i] <= weight) {
+			maxValue = i;
+			break;
+		}
+	}
+	return maxValue;
+}
+  ```
+
 
