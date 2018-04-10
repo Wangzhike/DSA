@@ -12,10 +12,7 @@
   3. rList    
     rList的头节点是需要反转的子链表mList的尾节点的`next`节点(即mList的尾后元素)，一直到该链表结束。    
 
-  反转步骤：    
-  如下图所示：    
-  ![反转](https://github.com/Wangzhike//DSA/raw/master/LinkedList/picture/reverse_singly-list.jpg)
-
+  反转步骤：     
   1. 定位lList的尾节点lLstTail    
     由于m可能为1，即从原链表的头节点开始反转，此时lList为空，需要特别处理。为了避免这种处理，我们引入头哨兵节点guardH，在这种情况下，lList就只含有guardH一个元素。    
   2. 定位mList的最初的头节点mLstOrgHead又记为mLstHead、需要反转的下一个节点mLstNode    
@@ -23,5 +20,7 @@
 	每次反转前，用succ记录mLstNode的后继，将mLstHead置为mLstNode的后继，mLstHead更新为mLstNode，mLstNode更新为succ，进行下一次反转。如此进行，直到反转结束，结束时mLstNode为rList的头节点。    
   3. 定位rList的头节点mLstNode    
     将反转后mList的尾节点mLstOrgHead的后继更新为rList的头节点mLstNode，将lList尾节点lLstTail的后继更新为反转后mList的头节点mLstHead。反转完成。    
+  如下图所示：    
+  ![反转](https://github.com/Wangzhike//DSA/raw/master/LinkedList/picture/reverse_singly-list.jpg)
 
 
