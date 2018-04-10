@@ -14,7 +14,7 @@
 
   反转步骤：    
   如下图所示：    
-  ![反转](https://github.com/Wangzhike/DSA/LinkedList/picture/reverse_singly-list.jpg)
+  ![反转](https://github.com/Wangzhike/raw/master/DSA/LinkedList/picture/reverse_singly-list.jpg)
 
   1. 定位lList的尾节点lLstTail    
     由于m可能为1，即从原链表的头节点开始反转，此时lList为空，需要特别处理。为了避免这种处理，我们引入头哨兵节点guardH，在这种情况下，lList就只含有guardH一个元素。    
