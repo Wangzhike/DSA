@@ -63,10 +63,10 @@
   ```
 
   2. [LeetCode 206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/description/)    
-    题目描述：    
-	> Reverse a singly linked list.    
+  题目描述：    
+  > Reverse a singly linked list.    
 
-	```cpp
+  ```cpp
     ListNode* reverseList(ListNode* head) {
         if (head == NULL)
             return head;
@@ -81,17 +81,17 @@
         }
         return newHead;
     } 
-	```
+  ```
 
   3. [LeetCode 92. Reverse Linked List II](https://leetcode.com/problems/reverse-linked-list-ii/description/)    
-    题目描述：    
+  题目描述：    
 	
-	> Reverse a linked list from position m to n. Do it in-place and in one-pass.    
-	  For example:    
-	  Given 1->2->3->4->5->NULL, m = 2 and n = 4,    
-	  return 1->4->3->2->5->NULL.    
+  > Reverse a linked list from position m to n. Do it in-place and in one-pass.    
+	For example:    
+	Given 1->2->3->4->5->NULL, m = 2 and n = 4,    
+	return 1->4->3->2->5->NULL.    
 	
-	```cpp
+  ```cpp
     ListNode* reverseBetween(ListNode* head, int m, int n) {
         if (n - m == 0)
             return head;
@@ -117,6 +117,6 @@
         mHead->next = p;
         return hguard.next;
     } 
-	```    
+  ```    
 
 
