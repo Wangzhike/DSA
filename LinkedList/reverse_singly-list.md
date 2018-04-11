@@ -23,4 +23,99 @@
   如下图所示：    
   ![反转](https://github.com/Wangzhike//DSA/raw/master/LinkedList/picture/reverse_singly-list.jpg)
 
+## 刷题    
+  1. [LeetCode 234. Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/description/)    
+    题目描述：    
+	> Given a singly linked list, determine if it is a palindrome.    
+
+	先定位到单链表的中点，然后对后面的子链表进行反转，反转后比较前后子链表是否相等即可。    
+	```cpp
+    bool isPalindrome(ListNode* head) {
+        int len = 0;
+        for (auto p = head; p; p = p->next)
+            ++len;
+        if (len <= 1)
+            return true;
+        ListNode guardH(-1);
+        guardH.next = head;
+        auto lLstTail = &guardH;
+        for (int i = 0; i < len/2; ++i)
+            lLstTail = lLstTail->next;
+        if (len & 0x1)
+            lLstTail = lLstTail->next;
+        auto mLstOrgHead = lLstTail->next;
+        auto mLstHead = lLstTail->next;
+        auto mLstNode = mLstHead->next;
+        while (mLstNode) {
+            auto succ = mLstNode->next;
+            mLstNode->next = mLstHead;
+            mLstHead = mLstNode;
+            mLstNode = succ;
+        }
+        mLstOrgHead->next = mLstNode;
+        lLstTail->next = mLstHead;
+        for (auto lLstp = guardH.next, mLstp = mLstHead; mLstp; mLstp = mLstp->next, lLstp = lLstp->next) {
+            // cout << lLstp->val << ", " << mLstp->val << endl;
+            if (lLstp->val != mLstp->val)
+                return false;
+        }
+        return true;
+	```
+
+  2. [LeetCode 206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/description/)    
+    题目描述：    
+	> Reverse a singly linked list.    
+
+	```cpp
+    ListNode* reverseList(ListNode* head) {
+        if (head == NULL)
+            return head;
+        auto newHead = head;
+        auto p = head->next;
+        head->next = NULL;
+        while (p) {
+            auto succ = p->next;
+            p->next = newHead;
+            newHead = p;
+            p = succ;
+        }
+        return newHead;
+    } 
+	```
+
+  3. [LeetCode 92. Reverse Linked List II](https://leetcode.com/problems/reverse-linked-list-ii/description/)    
+    题目描述：    
+	> Reverse a linked list from position m to n. Do it in-place and in one-pass.    
+	  For example:    
+	  Given 1->2->3->4->5->NULL, m = 2 and n = 4,    
+	  return 1->4->3->2->5->NULL.    
+	
+	```cpp
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+        if (n - m == 0)
+            return head;
+        ListNode hguard(-1);
+        hguard.next = head;
+        ListNode* lTail = &hguard;
+        for (int i = 0; i < m - 1; ++i)
+            lTail = lTail->next;
+        // cout << lTail->val << endl;
+        ListNode* mHead = lTail->next;
+        ListNode* pHead = mHead, *p = mHead->next;
+        for (int i = 0; i < n - m; ++i) {
+            ListNode* succ = p->next;
+            p->next = pHead;
+            pHead = p;
+            p = succ;
+        }
+        // if (p)
+        //     cout << p->val << endl;
+        // else
+        //     cout << "NULL" << endl;
+        lTail->next = pHead;
+        mHead->next = p;
+        return hguard.next;
+    } 
+	```    
+
 
