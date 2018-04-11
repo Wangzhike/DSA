@@ -25,12 +25,11 @@
 
 ## 刷题    
   1. [LeetCode 234. Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/description/)    
+
     题目描述：    
-	
-	> Given a singly linked list, determine if it is a palindrome.    
+    > Given a singly linked list, determine if it is a palindrome.    
 
 	先定位到单链表的中点，然后对后面的子链表进行反转，反转后比较前后子链表是否相等即可。    
-	
 	```cpp
     bool isPalindrome(ListNode* head) {
         int len = 0;
