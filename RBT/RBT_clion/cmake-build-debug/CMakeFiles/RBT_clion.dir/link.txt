@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/RBT_clion.dir/main.cpp.o CMakeFiles/RBT_clion.dir/RBT.cpp.o  -o RBT_clion 

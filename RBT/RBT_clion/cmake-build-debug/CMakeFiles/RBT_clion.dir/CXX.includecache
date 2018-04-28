@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/qiuyu/code/DSA/RBT/RBT_clion/RBT.cpp
+RBT.h
+/home/qiuyu/code/DSA/RBT/RBT_clion/RBT.h
+
+/home/qiuyu/code/DSA/RBT/RBT_clion/RBT.h
+
+/home/qiuyu/code/DSA/RBT/RBT_clion/main.cpp
+iostream
+-
+vector
+-
+RBT.h
+/home/qiuyu/code/DSA/RBT/RBT_clion/RBT.h
+
