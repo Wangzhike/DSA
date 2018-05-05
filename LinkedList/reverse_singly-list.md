@@ -21,7 +21,7 @@
   3. 定位rList的头节点mLstNode    
     将反转后mList的尾节点mLstOrgHead的后继更新为rList的头节点mLstNode，将lList尾节点lLstTail的后继更新为反转后mList的头节点mLstHead。反转完成。    
   如下图所示：    
-  ![反转](https://github.com/Wangzhike//DSA/raw/master/LinkedList/picture/reverse_singly-list.jpg)
+  ![反转](https://github.com/Wangzhike/DSA/raw/master/LinkedList/picture/reverse_singly-list.jpg)
 
 ## 刷题    
   1. [LeetCode 234. Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/description/)    
