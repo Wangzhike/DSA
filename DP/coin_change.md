@@ -13,22 +13,22 @@
   > You are given coins of different denominations and a total amount of money amount. Write a function to compute the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.    
 
   1. 做出一个选择，得到待解决的子问题    
-    类似于贪心的思想，将零钱集合按照非降序排序，考虑零钱集合中的末尾元素即当前面额最大的零钱`C[k]`，选择或不选择会产生两个独立的子问题。如果将原问题描述为`F(Amount, C_k)`，则：    
-	  1. 选择`C[k]`，对应的子问题为：`F(Amount-C[k], C_k)`    
-	  2. 不选择`C[k]`，对应的子问题为：`F(Amount, C_(k-1))`    
+    类似于贪心的思想，将零钱集合按照非降序排序，考虑零钱集合中的末尾元素即当前面额最大的零钱`C[k]`，选择或不选择会产生两个独立的子问题。如果将原问题描述为`F(C_k, Amount)`，则：    
+	  1. 选择`C[k]`，对应的子问题为：`F(C_k, Amount-C[k])`    
+	  2. 不选择`C[k]`，对应的子问题为：`F(C_(k-1), Amount)`    
 
   2. 组合子问题的最优解得到原问题的最优解    
-    `F(Amount, C_k) = min[F(Amount, C_(k-1)), F(Amount-C[k], C_k)+1]`    
+    `F(C_k, Amount) = min[F(C_(k-1), Amount), F(C_k, Amount-C[k])+1]`    
 
   3. 证明
       1. 子问题的解为它本身的最优解    
 	      1. 选择`C[k]`    
-	      剩余钱数为`Amount-C[k]`，可用的零钱集合为`C_k`，所以子问题最优解可描述为`F(Amount-C[k], C_k)+1`    
+	      剩余钱数为`Amount-C[k]`，可用的零钱集合为`C_k`，所以子问题最优解可描述为`F(C_k, Amount-C[k])+1`    
 	      2. 不选择`C[k]`    
-	      钱数仍为`Amount`，可用的零钱集合为`C_(k-1)`，所以子问题的最优解可描述为`F(Amount, C_(k-1))`    
+	      钱数仍为`Amount`，可用的零钱集合为`C_(k-1)`，所以子问题的最优解可描述为`F(C_(k-1), Amount)`    
 	
 	  2. 组合子问题的最优解可得到原问题的最优解    
-	  原问题的最优解必然从两种选择对应的子问题中产生，而且是其中找零次数最小的选择。选择`C[k]`，意味着已经找零了一次，所以子问题的最优解为`F(Amount-C[k], C_k)+1`。对两个子问题的最优解取较小的，即原问题的最优解。    
+	  原问题的最优解必然从两种选择对应的子问题中产生，而且是其中找零次数最小的选择。选择`C[k]`，意味着已经找零了一次，所以子问题的最优解为`F(C_k, Amount-C[k])+1`。对两个子问题的最优解取较小的，即原问题的最优解。    
 
   4. 存在重叠子问题    
     应该存在:)    
@@ -61,7 +61,7 @@
   ```
 
   5. 空间优化O(n^2)->O(n)    
-    根据最优子结构`F(Amount, C_k) = min[F(Amount, C_(k-1)), F(Amount-C[k], C_k)]`，如果以C_k作为行，能够看到原问题的最优解只依赖于当前行和上一行的子问题解，所以我们完全可以将原来O(n^2)空间的n_change，降维到O(n)。计算`F(j, i)`时，对应于此时要更新的`n_change[j]`；子问题`F(j, i-1)`对应已经计算过的`n_change[j]`；子问题`F(j-coins[i-1], i)`对应于当前行已经计算过的`n_change[j-coins[i-1]]`。空间优化后的代码如下：    
+    根据最优子结构`F(C_k, Amount) = min[F(C_(k-1), Amount), F(C_k, Amount-C[k])]`，如果以C_k作为行，能够看到原问题的最优解只依赖于当前行和上一行的子问题解，所以我们完全可以将原来O(n^2)空间的n_change，降维到O(n)。计算`F(i, j)`时，对应于此时要更新的`n_change[j]`；子问题`F(i-1, j)`对应已经计算过的`n_change[j]`；子问题`F(i, j-coins[i-1])`对应于当前行已经计算过的`n_change[j-coins[i-1]]`。空间优化后的代码如下：    
     
   ```cpp
     int coinChange(vector<int>& coins, int amount) {
@@ -96,7 +96,7 @@
     输出：共有5种拼凑方案。    
 
   类似于[1.1 求次数最小的找零方案](#11-求次数最小的找零方案)，最优子结构为：    
-  `F(Amount, C_k) = F(Amount, C_(k-1)) + F(Amount-C[k], C_k)`    
+  `F(C_k, Amount) = F(C_(k-1), Amount) + F(C_k, Amount-C[k])`    
   根据最优子结构，可以使用DP求解该问题，但是此问题的硬币集合已经给出且相对简单，故也可直接采用暴力枚举方法求解：还是类似于贪心思路，先使用面额最大5角钱，剩余的钱再使用2角钱拼凑，最后剩下的钱使用1角钱拼凑。该实现代码如下：    
   ```cpp
 int NCoinComb(int x)
@@ -139,28 +139,29 @@ int numOfCoinComb(int n) {
   [LeetCode 518: Coin Change 2](https://leetcode.com/problems/coin-change-2/description/):    
   > You are given coins of different denominations and a total amount of money. Write a function to compute the number of combinations that make up that amount. You may assume that you have infinite number of each kind of coin.    
 
-  如上所述，最优子结构为：`F(Amount, C_k) = F(Amount, C_(k-1)) + F(Amount-C[k], C_k)`。直接使用空间占用为O(n)的思路解决该问题，但是需要对初始值进行特别处理：具体而言，因为是两个子问题通过相加得到原问题的解，子问题`F(Amount, C_(k-1))`在此时为已经计算过(或初始化了的)F[Amount]，当硬币集合大小为空时，其取初始值，所以该初始值应为0；子问题`F(Amount-C[k], C_k)`此时为已经计算过的`F(Amount-C[k])`。特别的，此时对于`F(0)`，也就是`Amount=0`，同时零钱集合为空的情况，由于`F(Amount-C[k])`会取到该值`F(0)`，而既然能通过使用面额为`C[k]`的零钱，将`Amount`减小到0，此时就对应了一种合法的找零方案，所以`F(0)`应该取1，以上就是对初始化的处理。    
+  如上所述，最优子结构为：`F(C_k, Amount) = F(C_(k-1), Amount) + F(C_k, Amount-C[k])`。直接使用空间占用为O(n)的思路解决该问题，但是需要对初始值进行特别处理：具体而言，因为是两个子问题通过相加得到原问题的解，子问题`F(C_(k-1), Amount)`在此时为已经计算过(或初始化了的)F[Amount]，当硬币集合大小为空时，其取初始值，所以该初始值应为0；子问题`F(C_k, Amount-C[k])`此时为已经计算过的`F(Amount-C[k])`。特别的，此时对于`F(0)`，也就是`Amount=0`的情况，由于`F(Amount-C[k])`会取到该值`F(0)`，而既然能通过使用面额为`C[k]`的零钱，将`Amount`减小到0，此时就对应了一种合法的找零方案，所以`F(0)`应该取1，以上就是对初始化的处理。    
   代码实现如下：    
   ```cpp
-  int change(int amount, vector<int>& coins) {
-        int mostR = coins.size() - 1;
-        for (int i = mostR; i >= 0 && amount < coins[i]; --i)
-            --mostR;
-        if (mostR < 0 && amount == 0)
-            return 1;
-        if (amount <= 0)
-            return 0;
-        // cout << mostR << endl;
-        vector<int> num(amount+1, 0);
-        num[0] = 1;
-        for (int i = 0; i <= mostR ; ++i) {
-            for (int j = coins[i]; j < amount+1; ++j) {
-				/* 同上，j的下标从coins[i]开始！ */
-                num[j] += num[j-coins[i]];
-            }
+int change(int amount, vector<int>& coins) {
+    if (amount == 0)
+        return 1;
+    vector<int> n_change(amount+1, 0);
+    n_change[0] = 1;
+    int mostR = coins.size() - 1;
+    // 得到最后一个不大于amount的硬币的下标
+    while (mostR >= 0 && amount < coins[mostR])
+        --mostR;
+    // 遍历coins的大小从1到size的子数组
+    for (int i = 1; i <= mostR + 1; ++i)
+    {
+        // j从coins[i]开始，从而避免j - coins[i]为负值的非法检查
+        for (int j = coins[i-1]; j <= amount; ++j)
+        {
+            n_change[j] += n_change[j - coins[i-1]];
         }
-        return num[amount];
-    } 
+    }
+    return n_change[amount];
+}
   ```
 
 ## 2. 零钱集合中元素使用次数有限    
